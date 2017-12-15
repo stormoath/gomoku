@@ -1,0 +1,76 @@
+h1{
+    font-family: sans-serif;
+}
+
+button{
+    display: block;
+    margin: 2px;
+    font-family: sans-serif;
+    background-color: #555;
+    border: none;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.field{
+    background-color: #ccc;
+    border-radius: 2px;
+    flex-grow: 0;
+    font-family: SANS-SERIF;
+    font-size: 1em;
+    height: 1em;
+    margin: 2px;
+    padding: 0.5em;
+    text-align: center;
+    width: 1em;
+}
+
+.field:hover{
+    background-color: #eee;
+}
+
+.X{
+    background-color: #5555ff;
+}
+
+.O{
+    background-color: #ffaa00;
+}
+
+#wrapper{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#board{
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+#infoPanel{
+    align-content: left;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+    font-family: sans-serif;
+    min-width: 10%;
+    padding: 1em 2em;
+}
+
+#victoryMessage{
+    background: #fff;
+    border-radius: 20px;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 10em auto;
+    padding: 1em;
+    position: absolute;
+    text-align: center;
+    width: 80%;
+    z-index: 99999;
+}
+
+#victoryMessage button{
+    margin: auto;
+}

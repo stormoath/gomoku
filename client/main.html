@@ -1,0 +1,49 @@
+<head>
+  <title>Gomoku</title>
+</head>
+
+<body>
+  <h1>Gomoku!</h1>
+  {{> board}}
+</body>
+
+<template name="board">
+  {{#if won}}
+    <div id="victoryMessage" class={{currentPlayer}}>
+      <p>Game Over! "{{currentPlayer}}" has won the Game!</p>
+      <button class="newGame">Start a new session</button>
+    </div>
+  {{/if}}
+  <div id="wrapper">
+  <div id="board">
+  {{#each col in board}}
+  <div class="column">
+    {{#let colIndex=@index}}
+    {{#each symbol in col}}
+      <div class="field {{symbol}}" id={{colIndex}}_{{@index}}>
+      {{#if symbol colIndex @index}}
+        {{symbol colIndex @index}}
+      {{else}}
+        &nbsp;
+      {{/if}}
+      </div>
+  {{/each}}
+  {{/let}}
+  </div>
+  {{/each}}
+  </div>
+  <div id="infoPanel">
+    {{#if sessionJoined}}
+      <p>You are player {{player}}</p>  
+      <p>It is {{currentPlayer}} 's turn</p>
+    {{else}}
+      <p>There is no other player in this session</p>
+      <button id="joinSession">Join a session</button>
+    {{/if}}
+      <p>{{message}}</p>
+    {{#unless won}}
+      <button class="newGame">Start a new session</button>
+    {{/unless}}
+  </div>
+  </div>
+</template>
