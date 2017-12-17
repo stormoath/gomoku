@@ -9,8 +9,7 @@ var board = {}
 var id = 0;
 const idDep = new Tracker.Dependency;
 
-function createNewGame(){
-  Session.set('message','');
+function initBoard(){
   board = {
     board:  [],
     joined: false,
@@ -23,6 +22,10 @@ function createNewGame(){
     }
   }
   Math.random()>0.5 ? board.currentPlayer = 'X' : board.currentPlayer = 'O';
+}
+
+function createNewGame(){
+  initBoard();
   id = Games.insert(board);
   board._id = id;
   idDep.changed();
@@ -74,7 +77,9 @@ Template.board.onCreated(function boardOnCreated() {
 
 Template.board.helpers({
   board(){
-    return Games.findOne({_id:id}).board;
+    let thisGame = Games.findOne({_id:id});
+    let thisBoard = thisGame && thisGame.board;
+    return thisBoard;
   },
 
   player(){
@@ -82,19 +87,21 @@ Template.board.helpers({
   },
   
   currentPlayer(){
-    return Games.findOne({_id:id}).currentPlayer;
+    let thisGame = Games.findOne({_id:id});
+    let thisPlayer = thisGame && thisGame.currentPlayer;
+    return thisPlayer;
   },
 
   sessionJoined(){
-    return Games.findOne({_id:id}).joined;
-  },
-
-  message(){
-    return Session.get('message');
+    let thisGame = Games.findOne({_id:id});
+    let thisJoined = thisGame && thisGame.joined;
+    return thisJoined;
   },
 
   won(){
-    return Games.findOne({_id:id}).won;
+    let thisGame = Games.findOne({_id:id});
+    let thisWon = thisGame && thisGame.won;
+    return thisWon;
   }
 })
 
@@ -104,7 +111,9 @@ Template.board.events({
       board.joined = false;
       updateBoard();
     }
+    let oldId = JSON.parse(JSON.stringify(id));
     createNewGame();
+    Meteor.call('removeBoard', {oldId});
   },
   'click #joinSession': function(){
     board = Meteor.call('joinBoard', {id}, (err,res)=>{
@@ -113,10 +122,11 @@ Template.board.events({
       }
       else{
         if(!res){
-          Session.set('message',"No sessions to join available, creating new session!");
+          console.log("No sessions to join available, creating new session!");
           createNewGame();
           return;
         }
+        let oldId = JSON.parse(JSON.stringify(id));
         id = res._id;
         idDep.changed();
         board = res;
@@ -125,6 +135,7 @@ Template.board.events({
         board.currentPlayer === 'X' ? player = 'O' : player = 'X';
         Session.set('player', player);
         console.log("Joined session ", id, board.joined);
+        Meteor.call('removeBoard', {oldId});
         updateBoard();
       }
     });

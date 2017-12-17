@@ -31,5 +31,12 @@ Meteor.methods({
                 '_ts': new Date().getTime()
             }
         })
-    }
+    },
+    'removeBoard'({oldId}){
+        console.log('Removing ', oldId);
+        new SimpleSchema({
+            oldId: { type: String }
+        }).validate({oldId});
+        return Games.remove({_id:oldId});
+    },
 })
