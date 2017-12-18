@@ -47,7 +47,10 @@ function checkWinning(board,x,y){
   }
   directions.forEach(dir => {
     for(let i=1;i<5;i++){
-      if(board[x+dir[0]*i][y+dir[1]*i]!=player){
+      if(x+dir[0]*i<0 || x+dir[0]*i>14 || y+dir[1]<0 || y+dir[1]>14){
+        break;
+      }
+      else if(board[x+dir[0]*i][y+dir[1]*i]!=player){
         break;
       }
       if(i===4){
@@ -79,7 +82,12 @@ Template.board.helpers({
   board(){
     let thisGame = Games.findOne({_id:id});
     let thisBoard = thisGame && thisGame.board;
-    return thisBoard;
+    if(!thisBoard){
+      return board.board;
+    }
+    else{
+      return thisBoard;
+    }
   },
 
   player(){
@@ -113,9 +121,8 @@ Template.board.events({
     }
     let oldId = JSON.parse(JSON.stringify(id));
     createNewGame();
-    Meteor.call('removeBoard', {oldId});
   },
-  'click #joinSession': function(){
+  'click .joinSession': function(){
     board = Meteor.call('joinBoard', {id}, (err,res)=>{
       if(err){
         console.error("Error while joining board: ", err);
@@ -128,11 +135,11 @@ Template.board.events({
         }
         let oldId = JSON.parse(JSON.stringify(id));
         id = res._id;
-        idDep.changed();
         board = res;
         board.joined = true;
         let player = '';
         board.currentPlayer === 'X' ? player = 'O' : player = 'X';
+        idDep.changed();
         Session.set('player', player);
         console.log("Joined session ", id, board.joined);
         Meteor.call('removeBoard', {oldId});
