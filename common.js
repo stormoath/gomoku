@@ -33,7 +33,6 @@ Meteor.methods({
         })
     },
     'removeBoard'({oldId}){
-        console.log('Removing ', oldId);
         new SimpleSchema({
             oldId: { type: String }
         }).validate({oldId});
